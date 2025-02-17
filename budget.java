@@ -11,22 +11,28 @@ public class budget extends database {
     private JFrame frame;
     private JLabel totaLabel, spendLabel, weeklyRemainingLabel, daysLeftLabel, weeklyBudgetLabel;
     private JTextField dateField, categoryField, amountField;
+    private JComboBox comboBox;
     private JTextArea outputArea;
     private database database;
     public budget() {
         database = new database();
         frame = new JFrame("Budget Overview");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,600);
-        frame.setLayout(new GridLayout(5, 2));
+        frame.setSize(1000,800);
+        frame.setLayout(new GridLayout(7, 2));
 
         frame.add(new JLabel("Date (YYYY-MM-DD)"));
         dateField = new JTextField();
         frame.add(dateField);
-
+        /* 
         frame.add(new JLabel("Category: "));
         categoryField = new JTextField();
         frame.add(categoryField);
+        */
+        frame.add(new JLabel("Category: "));
+        String[] items = {"Food", "Shopping", "Travel", "Alc"};
+        comboBox = new JComboBox<>(items);
+        frame.add(comboBox);
 
         frame.add(new JLabel("Amount: "));
         amountField = new JTextField();
@@ -90,7 +96,7 @@ public class budget extends database {
 
     private void addTransaction() {
         String date = dateField.getText();
-        String category = categoryField.getText();
+        String category = (String) comboBox.getSelectedItem();
         double amount = 0.0;
         try {
             amount = Double.parseDouble(amountField.getText());
