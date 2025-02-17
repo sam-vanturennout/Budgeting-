@@ -60,6 +60,20 @@ public class database {
         }
     }
 
+    public void resetDatabase() {
+        String sql = "DROP TABLE IF EXISTS transactions";
+        try(Connection conn = DriverManager.getConnection(DB_URL);
+            Statement stat = conn.createStatement()) {
+                stat.executeUpdate(sql);
+                System.out.println("Database Reset Successfully");
+                createTable(conn);
+            }
+            catch(SQLException e) {
+                System.out.println("failed to reset");
+                e.printStackTrace();
+            }
+    }
+
 
 
 

@@ -44,6 +44,10 @@ public class budget extends database {
         JButton viewButton = new JButton("View Transactions");
         frame.add(viewButton);
 
+        JButton resetButton = new JButton("Reset Database");
+        frame.add(resetButton);
+
+
         outputArea = new JTextArea();
         outputArea.setEditable(false);
         frame.add(new JScrollPane(outputArea));
@@ -58,6 +62,12 @@ public class budget extends database {
         viewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 displayTransactions();
+            }
+        });
+
+        resetButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                resetTransactions();
             }
         });
 
@@ -111,6 +121,11 @@ public class budget extends database {
     }
     private void displayTransactions() {
         database.printAllTransactions();
+    }
+
+    private void resetTransactions() {
+        database.resetDatabase();
+        outputArea.setText("Transactions reset Successfully");
     }
     private void editBudget() {
         String[] options = {"Total Amount", "Weekly Allocation",};
