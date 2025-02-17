@@ -5,6 +5,7 @@ public class database {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             if (conn != null) {
                 System.out.println("Database connected");
+                createTable(conn);
             }
         }
         catch (SQLException e) {
@@ -19,7 +20,7 @@ public class database {
                         "category TEXT, " +
                         "amount REAL)";
             try(Statement stat = conn.createStatement()) {
-                stat.executeQuery(sql);
+                stat.executeUpdate(sql);
                 System.out.println("Table Created Successfully");
             } 
     }
@@ -37,6 +38,7 @@ public class database {
                 e.printStackTrace();
             }
     }
+    
 
     public void printAllTransactions() {
         String sql = "SELECT * FROM transactions";

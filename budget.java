@@ -1,20 +1,66 @@
 import javax.swing.*;
 import javax.swing.border.Border;
+import java.sql.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class budget extends JPanel {
+public class budget extends database {
     private JFrame frame;
     private JLabel totaLabel, spendLabel, weeklyRemainingLabel, daysLeftLabel, weeklyBudgetLabel;
+    private JTextField dateField, categoryField, amountField;
+    private JTextArea outputArea;
+    private database database;
     public budget() {
+        database = new database();
         frame = new JFrame("Budget Overview");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800,600);
-        frame.setLayout(new BorderLayout());
+        frame.setLayout(new GridLayout(5, 2));
 
+        frame.add(new JLabel("Date (YYYY-MM-DD)"));
+        dateField = new JTextField();
+        frame.add(dateField);
+
+        frame.add(new JLabel("Category: "));
+        categoryField = new JTextField();
+        frame.add(categoryField);
+
+        frame.add(new JLabel("Amount: "));
+        amountField = new JTextField();
+        frame.add(amountField);
+
+        JButton addButton = new JButton("Add Transaction");
+        frame.add(addButton);
+        
+        JButton viewButton = new JButton("View Transactions");
+        frame.add(viewButton);
+
+        outputArea = new JTextArea();
+        outputArea.setEditable(false);
+        frame.add(new JScrollPane(outputArea));
+
+        addButton.addActionListener(new ActionListener() {
+            public void  actionPerformed(ActionEvent e) {
+                addTransaction();
+                
+            }
+        });
+
+        viewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                displayTransactions();
+            }
+        });
+
+        frame.setVisible(true);
+        
+
+
+
+        /* 
         JPanel infoPanel = new JPanel(new GridLayout(1,4));
         totaLabel = new JLabel("Total Budget: 0.00$");
         spendLabel = new JLabel("Total Spent: 0.00$");
@@ -36,7 +82,29 @@ public class budget extends JPanel {
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        */
 
+        
+
+    }
+
+    private void addTransaction() {
+        String date = dateField.getText();
+        String category = categoryField.getText();
+        double amount = 0.0;
+        try {
+            amount = Double.parseDouble(amountField.getText());
+
+        } catch(NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "invalid amount format");
+            return;
+        }
+        database.addTransaction(date, category, amount);
+        outputArea.setText("Success! Transaction Added");
+
+    }
+    private void displayTransactions() {
+        database.printAllTransactions();
     }
     private void editBudget() {
         String[] options = {"Total Amount", "Weekly Allocation",};
@@ -69,5 +137,6 @@ public class budget extends JPanel {
                 // look how to have program maintain values/ update itself
         
     }
+    
     
 }
