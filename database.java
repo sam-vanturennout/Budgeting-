@@ -74,6 +74,22 @@ public class database {
             }
     }
 
+    public double getWeeklySpending() {
+        String sql = "SELECT SUM(amount) FROM transactions WHERE striftime('%Y-%W', date) = striftime('%Y-%W', 'now')";
+        try(Connection conn = DriverManager.getConnection(DB_URL);
+            PreparedStatement stat = conn.prepareStatement(sql);
+            ResultSet rs = stat.executeQuery()) {
+                if(rs.next()) {
+                    return rs.getDouble(1);
+                }
+            } catch( SQLException e) {
+                System.out.println("Failed to retrieve weekly Spending");
+                e.printStackTrace();
+            }
+            return 0.0;
+        
+    }
+
 
 
 
