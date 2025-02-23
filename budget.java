@@ -10,10 +10,11 @@ import java.util.Arrays;
 public class budget extends database {
     private JFrame frame;
     private JLabel totaLabel, spendLabel, weeklyRemainingLabel, daysLeftLabel, weeklyBudgetLabel;
-    private JTextField dateField, categoryField, amountField;
+    private JTextField dateField, categoryField, amountField, budgetField;
     private JComboBox comboBox;
     private JTextArea outputArea;
     private database database;
+    private double weeklyBudget;
     public budget() {
         database = new database();
         frame = new JFrame("Budget Overview");
@@ -38,6 +39,10 @@ public class budget extends database {
         amountField = new JTextField();
         frame.add(amountField);
 
+        frame.add(new JLabel("Set Weekly Budget: "));
+        budgetField = new JTextField();
+        frame.add(budgetField);
+
         JButton addButton = new JButton("Add Transaction");
         frame.add(addButton);
         
@@ -46,6 +51,9 @@ public class budget extends database {
 
         JButton resetButton = new JButton("Reset Database");
         frame.add(resetButton);
+        
+        JButton checkBudgetButton = new JButton("Check Weekly Budget");
+        frame.add(checkBudgetButton);
 
 
         outputArea = new JTextArea();
@@ -68,6 +76,12 @@ public class budget extends database {
         resetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 resetTransactions();
+            }
+        });
+
+        checkBudgetButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                checkWeeklyBudget();
             }
         });
 
@@ -126,6 +140,17 @@ public class budget extends database {
     private void resetTransactions() {
         database.resetDatabase();
         outputArea.setText("Transactions reset Successfully");
+    }
+
+    private void checkWeeklyBudget() {
+        try {
+            weeklyBudget = Double.parseDouble(budgetField.getText());
+        } catch(NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Invalid Budget Format.");
+            return;
+        }
+        double spending = database.getWeeklySpending();
+        outputArea.setText("Weekly Spending: " + spending + "\nBudget: " + weeklyBudget + "\nRemaining: " + (weeklyBudget - spending));
     }
     private void editBudget() {
         String[] options = {"Total Amount", "Weekly Allocation",};
